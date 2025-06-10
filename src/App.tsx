@@ -1,10 +1,15 @@
-function App() {
-  
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import LandingScreen from "./screens/LandingScreen";
+import GlaucomaDetectionScreen from "./screens/GlaucomaDetectionScreen";
 
+function App() {
   return (
-  <div>
-    Hello to EyeVanguard
-  </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<LandingScreen />} />
+        <Route path="/home" element={<GlaucomaDetectionScreen />} />
+      </Routes>
+    </Router>
   )
 }
 
