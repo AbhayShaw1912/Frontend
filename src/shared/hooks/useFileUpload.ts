@@ -1,6 +1,5 @@
 import { useState, useCallback } from 'react';
 import { validateFile, createPreviewUrl, revokePreviewUrl } from '../utils/fileValidation';
-import { detectGlaucoma } from '../api/detect';
 import type { Result, UploadStatus } from '../types';
 
 export function useFileUpload(
@@ -10,33 +9,22 @@ export function useFileUpload(
     const [preview, setPreview] = useState<string | null>(null);
     const [uploadStatus, setUploadStatus] = useState<UploadStatus>({ status: 'idle' });
 
-    const handleFile = useCallback(async (file: File) => {
+    const handleFile =  (file: File) => {
         const validation = validateFile(file);
-        
+
         if (!validation.isValid) {
             setUploadStatus({ status: 'error', error: validation.error });
             return;
         }
 
         const previewUrl = createPreviewUrl(file);
+        console.log(previewUrl)
         setPreview(previewUrl);
         setUploadStatus({ status: 'success' });
 
-        try {
-            setIsLoading(true);
-            setResult(null);
-            const report = await detectGlaucoma(file);
-            setResult(report);
-        } catch (err) {
-            console.error('Detection error:', err);
-            setUploadStatus({ 
-                status: 'error', 
-                error: 'Failed to analyze image. Please try again.' 
-            });
-        } finally {
-            setIsLoading(false);
-        }
-    }, [setResult, setIsLoading]);
+        return file;
+
+    }
 
     const resetUpload = useCallback(() => {
         if (preview) {
@@ -51,6 +39,7 @@ export function useFileUpload(
         preview,
         uploadStatus,
         handleFile,
-        resetUpload
+        resetUpload,
+        setUploadStatus
     };
 }

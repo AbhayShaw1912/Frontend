@@ -1,19 +1,49 @@
 import { Result } from '../types/api';
+import axios from "axios";
 
-export async function detectGlaucoma(file: File): Promise<Result> {
+const formData = new FormData();
+export async function CnnResult(formData): Promise<any>{
+    const result = await axios.post("https://nthander2002-eyevanguard.hf.space/predict_cnn", formData,{
+        headers : { 'Content-Type' : 'multipart/form-data', 'accept': 'application/json' },
+
+    })
+
+    return result.data
+}
+
+export async function TransformerResult(formData): Promise<any>{
+    const result = await axios.post("https://nthander2002-eyevanguard.hf.space/predict_transformer", formData,{
+        headers : { 'Content-Type' : 'multipart/form-data', 'accept': 'application/json' },
+
+
+
+    })
+
+    return result.data
+}
+
+export async function detectGlaucoma(model, file: File): Promise<Result> {
+
+
+    formData.append('file', new Blob([file]));
+
+    const result = model == "CNN" ? await CnnResult(formData) : await TransformerResult(formData)
+
+
+
     await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 2000));
 
+
+
     const fileName = file.name.toLowerCase();
-    const isGlaucomaPositive = fileName.includes('glaucoma') || 
-                               fileName.includes('positive') || 
-                               Math.random() > 0.7;
-    
+    const isGlaucomaPositive = result.label.toLowerCase() == "positive"
+
     if (isGlaucomaPositive) {
-        const detectedPercent = Math.floor(65 + Math.random() * 30); 
+        const detectedPercent = result.probability * 100
         return {
             diagnosis: "Glaucoma indicators detected - Further evaluation recommended",
             detectedPercent,
-            confidence: detectedPercent >= 80 ? 'high' : 'medium',
+            confidence: Math.round(result.confidence * 100) >= 60 ? 'high' : 'medium',
             timestamp: new Date().toISOString(),
             recommendations: [
                 "Consult with an ophthalmologist immediately",
@@ -22,7 +52,7 @@ export async function detectGlaucoma(file: File): Promise<Result> {
             ]
         };
     } else {
-        const detectedPercent = Math.floor(5 + Math.random() * 35); 
+        const detectedPercent = Math.floor(result.probability * 100);
         return {
             diagnosis: "No significant glaucoma indicators detected",
             detectedPercent,
