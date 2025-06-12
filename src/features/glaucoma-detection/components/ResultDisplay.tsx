@@ -1,4 +1,4 @@
-import { isPositiveDiagnosis, getConfidenceLevel, formatConfidenceText } from '../../../shared/utils/confidence';
+import { isPositiveDiagnosis } from '../../../shared/utils/confidence';
 import StatusIcon from './StatusIcon';
 import ConfidenceBar from './ConfidenceBar';
 import DiagnosisCard from './DiagnosisCard';
@@ -17,8 +17,8 @@ function ResultDisplay({ result, isLoading }: ResultDisplayProps) {
     }
 
     const isPositive = isPositiveDiagnosis(result.diagnosis);
-    const confidenceLevel = getConfidenceLevel(result.detectedPercent);
-    
+    // const confidenceLevel = getConfidenceLevel(result.detectedPercent);
+
     return (
         <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
             <div className="space-y-6">
@@ -28,7 +28,7 @@ function ResultDisplay({ result, isLoading }: ResultDisplayProps) {
                     <div>
                         <h3 className="text-xl font-bold text-gray-900">Analysis Complete</h3>
                         <p className="text-sm text-gray-600">
-                            {new Date().toLocaleDateString()} • AI Confidence: {formatConfidenceText(confidenceLevel.level)}
+                            {new Date().toLocaleDateString()} • AI Confidence: {result.detectedPercent}
                         </p>
                     </div>
                 </div>
@@ -40,7 +40,7 @@ function ResultDisplay({ result, isLoading }: ResultDisplayProps) {
                 <ConfidenceBar percentage={result.detectedPercent} />
 
                 {/* Recommendations */}
-                <RecommendationCard 
+                <RecommendationCard
                     diagnosis={result.diagnosis}
                     recommendations={result.recommendations}
                 />
