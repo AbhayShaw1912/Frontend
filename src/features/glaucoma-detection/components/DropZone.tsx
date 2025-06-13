@@ -6,12 +6,13 @@ import UploadButton from './UploadButton';
 import ErrorMessage from './ErrorMessage';
 import type { DropZoneProps } from '../../../shared/types';
 import { detectGlaucoma } from "../../../shared/api";
-import {useState} from "react";
+import { useRef, useState } from "react";
 
 function DropZone({ setResult, setIsLoading }: DropZoneProps) {
     const { preview, uploadStatus, setUploadStatus, handleFile, resetUpload } = useFileUpload(setResult, setIsLoading);
     const { isDragActive, dragHandlers } = useDragAndDrop(handleFile);
-    const [file, setFile] = useState<File | undefined>()
+    const [file, setFile] = useState<File | undefined>();
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
 
 
     const onFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,8 +23,8 @@ function DropZone({ setResult, setIsLoading }: DropZoneProps) {
         }
     };
 
-    async function CnnModelResult(){
-        if(!file) return
+    async function CnnModelResult() {
+        if (!file) return
         try {
             setIsLoading(true);
             setResult(null);
@@ -40,8 +41,8 @@ function DropZone({ setResult, setIsLoading }: DropZoneProps) {
         }
     }
 
-    async function TransFormerModelResult(){
-        if(!file) return
+    async function TransFormerModelResult() {
+        if (!file) return
         try {
             setIsLoading(true);
             setResult(null);
@@ -81,6 +82,7 @@ function DropZone({ setResult, setIsLoading }: DropZoneProps) {
             <div {...dragHandlers} className={getDropZoneClasses()}>
                 <input
                     type="file"
+                    ref={fileInputRef}
                     accept="image/*"
                     onChange={onFileSelect}
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
@@ -92,7 +94,13 @@ function DropZone({ setResult, setIsLoading }: DropZoneProps) {
                         <ImagePreview
                             src={preview}
                             alt="Preview"
-                            onRemove={resetUpload}
+                            onRemove={() => {
+                                resetUpload();
+                                setFile(undefined);
+                                if (fileInputRef.current) {
+                                    fileInputRef.current.value = "";
+                                }
+                            }}
                         />
                         <div className="flex items-center justify-center space-x-2">
                             <CheckCircle className="w-5 h-5 text-green-600" />
@@ -117,12 +125,12 @@ function DropZone({ setResult, setIsLoading }: DropZoneProps) {
 
                 <UploadButton
                     onClick={() => CnnModelResult()}
-                    text = "CNN Model"
+                    text="CNN Model"
                     enabled={!!file}
                 />
                 <UploadButton
                     onClick={() => TransFormerModelResult()}
-                    text = "Transformer Model"
+                    text="Transformer Model"
                     enabled={!!file}
                 />
             </div>
