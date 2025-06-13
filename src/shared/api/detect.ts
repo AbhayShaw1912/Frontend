@@ -37,12 +37,12 @@ export async function detectGlaucoma(model, file: File): Promise<Result> {
 
     const fileName = file.name.toLowerCase();
     const isGlaucomaPositive = result.label.toLowerCase() == "positive"
+    const detectedPercent = Math.round(Math.floor(result.probability * 100))
 
     if (isGlaucomaPositive) {
-        const detectedPercent = result.probability * 100
         return {
             diagnosis: "Glaucoma indicators detected - Further evaluation recommended",
-            detectedPercent,
+            detectedPercent: detectedPercent,
             confidence: Math.round(result.confidence * 100) >= 60 ? 'high' : 'medium',
             timestamp: new Date().toISOString(),
             recommendations: [
@@ -52,10 +52,10 @@ export async function detectGlaucoma(model, file: File): Promise<Result> {
             ]
         };
     } else {
-        const detectedPercent = Math.floor(result.probability * 100);
+        const detectedPercent = Math.round(Math.floor(result.probability * 100));
         return {
             diagnosis: "No significant glaucoma indicators detected",
-            detectedPercent,
+            detectedPercent: detectedPercent,
             confidence: 'low',
             timestamp: new Date().toISOString(),
             recommendations: [

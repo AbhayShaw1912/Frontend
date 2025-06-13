@@ -12,8 +12,8 @@ function GlaucomaDetectionScreen() {
             <div className="bg-white shadow-sm border-b border-gray-100">
                 <div className="container mx-auto px-6 py-8">
                     <h1 className="text-5xl font-bold text-center">
-                        <span className="text-gray-900">Glaucoma</span>
-                        <span className="text-blue-600 ml-2">Detector</span>
+                        <span className="text-gray-900">Eye</span>
+                        <span className="text-blue-600 ml-2">Vanguard</span>
                     </h1>
                     <p className="text-center text-gray-600 mt-3 text-lg">
                         Advanced AI-powered glaucoma detection from retinal images

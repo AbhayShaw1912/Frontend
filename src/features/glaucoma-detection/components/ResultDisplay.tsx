@@ -28,7 +28,7 @@ function ResultDisplay({ result, isLoading }: ResultDisplayProps) {
                     <div>
                         <h3 className="text-xl font-bold text-gray-900">Analysis Complete</h3>
                         <p className="text-sm text-gray-600">
-                            {new Date().toLocaleDateString()} • AI Confidence: {result.detectedPercent}
+                            {new Date().toLocaleDateString()} • AI Confidence: {result.detectedPercent}%
                         </p>
                     </div>
                 </div>

@@ -11,7 +11,7 @@ import {useState} from "react";
 function DropZone({ setResult, setIsLoading }: DropZoneProps) {
     const { preview, uploadStatus, setUploadStatus, handleFile, resetUpload } = useFileUpload(setResult, setIsLoading);
     const { isDragActive, dragHandlers } = useDragAndDrop(handleFile);
-    const [file, setFile] = useState<File>(null)
+    const [file, setFile] = useState<File | undefined>()
 
 
     const onFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,6 +23,7 @@ function DropZone({ setResult, setIsLoading }: DropZoneProps) {
     };
 
     async function CnnModelResult(){
+        if(!file) return
         try {
             setIsLoading(true);
             setResult(null);
@@ -40,6 +41,7 @@ function DropZone({ setResult, setIsLoading }: DropZoneProps) {
     }
 
     async function TransFormerModelResult(){
+        if(!file) return
         try {
             setIsLoading(true);
             setResult(null);
@@ -116,10 +118,12 @@ function DropZone({ setResult, setIsLoading }: DropZoneProps) {
                 <UploadButton
                     onClick={() => CnnModelResult()}
                     text = "CNN Model"
+                    enabled={!!file}
                 />
                 <UploadButton
                     onClick={() => TransFormerModelResult()}
                     text = "Transformer Model"
+                    enabled={!!file}
                 />
             </div>
         </div>

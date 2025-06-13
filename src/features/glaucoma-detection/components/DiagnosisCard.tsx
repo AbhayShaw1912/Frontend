@@ -12,7 +12,7 @@ function DiagnosisCard({ diagnosis, className = '' }: DiagnosisCardProps) {
                 <FileText className="w-5 h-5 text-blue-600 mt-1 flex-shrink-0" />
                 <div className="flex-1">
                     <h4 className="font-semibold text-gray-900 mb-2">Diagnosis</h4>
-                    <p className="text-gray-800 text-lg">{diagnosis}</p>
+                    <p className="text-gray-800 text-sm">{diagnosis}</p>
                 </div>
             </div>
         </div>
